@@ -19,6 +19,13 @@ public class Discente {
     @Column(name = "matricola", nullable = false)
     private int matricola;
 
+    @Column(name = "eta", nullable = false)
+    private int eta;
+
+    @Column(name = "CittaResidenza", nullable = false)
+    private String cittaResidenza;
+
+
 
 
     /* costruttori */
@@ -27,6 +34,8 @@ public class Discente {
         this.nome = nome;
         this.cognome = cognome;
         this.matricola = matricola;
+        this.eta = eta;
+        this.cittaResidenza = cittaResidenza;
     }
 
     public Long getId() {
@@ -58,5 +67,20 @@ public class Discente {
     }
     public void setMatricola(int matricola) {
         this.matricola = matricola;
+    }
+
+    public int getEta(){
+        return eta;
+    }
+    public void setEta(int eta) {
+        this.eta = eta;
+    }
+
+    public String getCittaResidenza() {
+        return cittaResidenza;
+    }
+
+    public void setCittaResidenza(String cittaResidenza) {
+        this.cittaResidenza = cittaResidenza;
     }
 }

@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Docente;
-import com.example.demo.repository.DocenteRepository;
+import com.example.demo.entity.Discente;
+import com.example.demo.repository.DiscenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +15,18 @@ public class DiscenteService {
     DiscenteRepository discenteRepository;
 
     public List<Discente> findAll() {
-        return docenteRepository.findAll();
+        return discenteRepository.findAll();
     }
 
-    public Docente get(Long id) {
-        return docenteRepository.findById(id).orElseThrow();
+    public Discente get(Long id) {
+        return discenteRepository.findById(id).orElseThrow();
     }
 
-    public Docente save(Docente d) {
-        return docenteRepository.save(d);
+    public Discente save(Discente d) {
+        return discenteRepository.save(d);
     }
 
     public void delete(Long id) {
-        docenteRepository.deleteById(id);
+        discenteRepository.deleteById(id);
     }
 }
