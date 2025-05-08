@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DocenteService {
+public class DiscenteService {
 
 
     @Autowired
-    DocenteRepository docenteRepository;
+    DiscenteRepository discenteRepository;
 
-    public List<Docente> findAll() {
+    public List<Discente> findAll() {
         return docenteRepository.findAll();
     }
 

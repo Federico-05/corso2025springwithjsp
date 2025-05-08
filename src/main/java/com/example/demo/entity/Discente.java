@@ -3,8 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "docenti")
-public class Docente {
+@Table(name = "discenti")
+public class Discente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,15 +16,17 @@ public class Docente {
     @Column(name = "cognome", nullable = false)
     private String cognome;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+    @Column(name = "matricola", nullable = false)
+    private int matricola;
+
+
 
     /* costruttori */
-    public Docente() {}
-    public Docente(String nome, String cognome, String email) {
+    public Discente() {}
+    public Discente(String nome, String cognome, String email) {
         this.nome = nome;
         this.cognome = cognome;
-        this.email = email;
+        this.matricola = matricola;
     }
 
     public Long getId() {
@@ -51,11 +53,10 @@ public class Docente {
         this.cognome = cognome;
     }
 
-    public String getEmail() {
-        return email;
+    public int getMatricola(){
+        return matricola;
     }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMatricola(int matricola) {
+        this.matricola = matricola;
     }
 }
