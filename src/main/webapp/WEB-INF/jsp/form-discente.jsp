@@ -24,12 +24,23 @@
         <input type="number" name="matricola" id="matricola" class="form-control" value="${discente.matricola}" required>
     </div>
     <div class="mb-3">
-        <label for="eta" class="form-label">Età</label>
+        <label for="eta" class="form-label">Eta</label>
         <input type="number" name="eta" id="eta" class="form-control" value="${discente.eta}" required>
     </div>
     <div class="mb-3">
-        <label for="citta_residenza" class="form-label">Città di Residenza</label>
+        <label for="citta_residenza" class="form-label">Citta di Residenza</label>
         <input type="text" name="citta_residenza" id="citta_residenza" class="form-control" value="${discente.citta_residenza}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="corsoId" class="form-label">Corso</label>
+        <select name="corsoId" id="corsoId" class="form-select" required>
+            <c:forEach var="corso" items="${corsi}">
+                <option value="${corso.id}" ${corso.id == discente.corsi[0].id ? 'selected' : ''}>
+                    ${corso.nome}
+                </option>
+            </c:forEach>
+        </select>
     </div>
 
     <button type="submit" class="btn btn-success">Salva</button>

@@ -45,8 +45,8 @@
         <th>Nome</th>
         <th>Cognome</th>
         <th>Matricola</th>
-        <th>Età</th>
-        <th>Città di Residenza</th>
+        <th>Eta</th>
+        <th>Citta di Residenza</th>
         <th>Azioni</th>
     </tr>
     </thead>

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Corso</title>
+    <title>Aggiungi/modifica corso</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
 </head>
 <body class="container mt-4">
@@ -34,7 +34,7 @@
             </c:forEach>
         </select>
     </div>
-    <h5 class="mt-4">Discenti assegnati</h5>
+    <h5 class="mt-4">Elenco discenti</h5>
         <div class="row">
             <c:forEach var="discente" items="${tuttiDiscenti}">
                 <div class="col-md-6 col-lg-4 mb-2">

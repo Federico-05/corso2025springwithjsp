@@ -37,18 +37,26 @@ public class CorsoController {
         model.addAttribute("corso", new Corso());
         model.addAttribute("docenti", docenteService.findAll());
         model.addAttribute("tuttiDiscenti", discenteRepository.findAll());
-        return "redirect:/corso";
+        return "form-corso";
     }
 
     @PostMapping("/salva")
     public String create(@ModelAttribute("corso") Corso corso,
                          @RequestParam("id_docente") Long docenteId,
+                         @RequestParam(value = "discenteIds", required = false) List<Long> discenteIds,
                          BindingResult br) {
         if (br.hasErrors()) {
             return "form-corso";
         }
         Docente docente = docenteService.get(docenteId);
         corso.setDocente(docente);
+
+        if (discenteIds != null) {
+            corso.setDiscenti(discenteRepository.findAllById(discenteIds));
+        } else {
+            corso.setDiscenti(List.of());
+        }
+
         corsoService.save(corso);
         return "redirect:/corsi/lista";
     }
@@ -66,6 +74,7 @@ public class CorsoController {
     public String update(@PathVariable Long id,
                          @ModelAttribute("corso") Corso corso,
                          @RequestParam("id_docente") Long docenteId,
+                         @RequestParam(value = "discenteIds", required = false) List<Long> discenteIds,
                          BindingResult br) {
         if (br.hasErrors()) {
             return "form-corso";
@@ -73,6 +82,13 @@ public class CorsoController {
         corso.setId(id);
         Docente docente = docenteService.get(docenteId);
         corso.setDocente(docente);
+
+        if (discenteIds != null) {
+            corso.setDiscenti(discenteRepository.findAllById(discenteIds));
+        } else {
+            corso.setDiscenti(List.of());
+        }
+
         corsoService.save(corso);
         return "redirect:/corsi/lista";
     }
@@ -80,6 +96,6 @@ public class CorsoController {
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         corsoService.delete(id);
-        return "redirect:/corso";
+        return "redirect:/corsi/lista";
     }
 }
