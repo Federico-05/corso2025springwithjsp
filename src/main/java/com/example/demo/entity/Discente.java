@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "discenti")
@@ -22,20 +24,20 @@ public class Discente {
     @Column(name = "eta", nullable = false)
     private int eta;
 
-    @Column(name = "CittaResidenza", nullable = false)
-    private String cittaResidenza;
+    @Column(name = "citta_residenza", nullable = false)
+    private String citta_residenza;
 
+    @ManyToMany(mappedBy = "discenti")
+    private List<Corso> corsi = new ArrayList<>();
 
-
-
-    /* costruttori */
     public Discente() {}
-    public Discente(String nome, String cognome, String email) {
+
+    public Discente(String nome, String cognome, int matricola, int eta, String citta_residenza) {
         this.nome = nome;
         this.cognome = cognome;
         this.matricola = matricola;
         this.eta = eta;
-        this.cittaResidenza = cittaResidenza;
+        this.citta_residenza = citta_residenza;
     }
 
     public Long getId() {
@@ -62,25 +64,35 @@ public class Discente {
         this.cognome = cognome;
     }
 
-    public int getMatricola(){
+    public int getMatricola() {
         return matricola;
     }
+
     public void setMatricola(int matricola) {
         this.matricola = matricola;
     }
 
-    public int getEta(){
+    public int getEta() {
         return eta;
     }
+
     public void setEta(int eta) {
         this.eta = eta;
     }
 
-    public String getCittaResidenza() {
-        return cittaResidenza;
+    public String getCitta_residenza() {
+        return citta_residenza;
     }
 
-    public void setCittaResidenza(String cittaResidenza) {
-        this.cittaResidenza = cittaResidenza;
+    public void setCitta_residenza(String citta_residenza) {
+        this.citta_residenza = citta_residenza;
+    }
+
+    public List<Corso> getCorsi() {
+        return corsi;
+    }
+
+    public void setCorsi(List<Corso> corsi) {
+        this.corsi = corsi;
     }
 }

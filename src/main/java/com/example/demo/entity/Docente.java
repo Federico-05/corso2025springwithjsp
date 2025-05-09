@@ -19,7 +19,6 @@ public class Docente {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    /* costruttori */
     public Docente() {}
     public Docente(String nome, String cognome, String email) {
         this.nome = nome;

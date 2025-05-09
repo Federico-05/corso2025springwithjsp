@@ -7,7 +7,7 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
 </head>
 <body class="container mt-4">
-<h1>Docente</h1>
+<h1>Aggiungi/modifica docente</h1>
 
 <form action="<c:url value='/docenti'/>" method="post">
     <input type="hidden" name="id" value="${docente.id}" />

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/docenti")
 public class DocenteController {
@@ -18,7 +19,6 @@ public class DocenteController {
     @Autowired
     DocenteService docenteService;
 
-    // LISTA
     @GetMapping("/lista")
     public String list(Model model) {
         List<Docente> docenti = new ArrayList<>();
@@ -27,14 +27,12 @@ public class DocenteController {
         return "list-docenti";
     }
 
-    // FORM NUOVO
     @GetMapping("/nuovo")
     public String showAdd(Model model) {
         model.addAttribute("docente", new Docente());
         return "form-docente";
     }
 
-    // SALVA NUOVO
     @PostMapping
     public String create(@ModelAttribute("docente") Docente docente,
                          BindingResult br) {
@@ -43,14 +41,12 @@ public class DocenteController {
         return "redirect:/docenti/lista";
     }
 
-    // FORM EDIT
     @GetMapping("/{id}/edit")
     public String showEdit(@PathVariable Long id, Model model) {
         model.addAttribute("docente", docenteService.get(id));
         return "form-docente";
     }
 
-    // AGGIORNA
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
                          @ModelAttribute("docente") Docente docente,
@@ -61,14 +57,12 @@ public class DocenteController {
         return "redirect:/docenti/lista";
     }
 
-    // DELETE
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         docenteService.delete(id);
         return "redirect:/docenti/lista";
     }
 
-//PROVA
 
 
 
