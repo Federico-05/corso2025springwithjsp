@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Corso;
+import com.example.demo.entity.Discente;
 import com.example.demo.entity.Docente;
 import com.example.demo.repository.CorsoRepository;
 import com.example.demo.repository.DocenteRepository;
@@ -35,5 +36,12 @@ public class CorsoService {
 
     public List<Docente> getAllDocenti() {
         return docenteRepository.findAll();
+    }
+
+    public List<Corso> ord_nome_asc(){
+        return corsoRepository.ord_nome_asc();
+    }
+    public List<Corso> ord_nome_desc() {
+        return corsoRepository.ord_nome_desc();
     }
 }

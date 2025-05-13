@@ -36,6 +36,10 @@
 <h1>Elenco Corsi</h1>
 
 <a class="btn btn-primary mb-3" href="<c:url value='/corsi/nuovo'/>">Nuovo corso</a>
+<a class="btn btn-success mb-3" href="/corsi/lista?filter=asc">Ordina per nome (A-Z)</a>
+<a class="btn btn-danger mb-3" href="/corsi/lista?filter=desc">Ordina per nome (Z-A)</a>
+
+
 
 <table class="table table-striped">
     <thead>

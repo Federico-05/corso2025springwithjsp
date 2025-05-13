@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.Discente;
 import com.example.demo.entity.Docente;
 import com.example.demo.repository.DocenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,12 @@ public class DocenteService {
 
     public void delete(Long id) {
         docenteRepository.deleteById(id);
+    }
+
+    public List<Docente> ord_nome_asc(){
+        return docenteRepository.ord_nome_asc();
+    }
+    public List<Docente> ord_nome_desc() {
+        return docenteRepository.ord_nome_desc();
     }
 }

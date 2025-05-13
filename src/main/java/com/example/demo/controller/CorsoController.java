@@ -26,8 +26,15 @@ public class CorsoController {
     private com.example.demo.repository.DiscenteRepository discenteRepository;
 
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<Corso> corsi = corsoService.findAll();
+    public String list(Model model, @RequestParam(name = "filter", required = false) String filter) {
+        List<Corso> corsi;
+        if ("asc".equalsIgnoreCase(filter)) {
+            corsi = corsoService.ord_nome_asc();
+        }else if ("desc".equalsIgnoreCase(filter)) {
+            corsi = corsoService.ord_nome_desc();
+        } else {
+            corsi = corsoService.findAll();
+        }
         model.addAttribute("corsi", corsi);
         return "list-corsi";
     }

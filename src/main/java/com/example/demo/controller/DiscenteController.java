@@ -23,8 +23,15 @@ public class DiscenteController {
     private CorsoService corsoService;
 
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<Discente> discenti = discenteService.findAll();
+    public String list(Model model, @RequestParam(name = "filter", required = false) String filter) {
+        List<Discente> discenti;
+        if ("asc".equalsIgnoreCase(filter)) {
+            discenti = discenteService.ord_nome_asc();
+        } else if ("desc".equalsIgnoreCase(filter)) {
+            discenti = discenteService.ord_nome_desc();
+        } else {
+            discenti = discenteService.findAll();
+        }
         model.addAttribute("discenti", discenti);
         return "list-discenti";
     }
