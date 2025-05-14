@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Corso;
-import com.example.demo.entity.Discente;
+import com.example.demo.data.entity.Discente;
 import com.example.demo.repository.DiscenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

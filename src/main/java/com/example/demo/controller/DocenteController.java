@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Docente;
+import com.example.demo.converter.Converter;
+import com.example.demo.data.dto.DocenteDTO;
+import com.example.demo.data.entity.Docente;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +20,12 @@ public class DocenteController {
 
     @Autowired
     DocenteService docenteService;
+    @Autowired
+    Converter converter;
 
     @GetMapping("/lista")
     public String list(Model model, @RequestParam(name = "filter", required = false) String filter) {
-        List<Docente> docenti;
+        List<Docente> docenti = new ArrayList<>();
         if ("asc".equalsIgnoreCase(filter)) {
             docenti = docenteService.ord_nome_asc();
         } else if ("desc".equalsIgnoreCase(filter)) {
@@ -30,7 +34,7 @@ public class DocenteController {
             docenti = docenteService.findAll();
         }
 
-        model.addAttribute("docenti", docenti);
+        model.addAttribute("docenti", converter.docente_convertiti(docenti));
         return "list-docenti";
     }
 

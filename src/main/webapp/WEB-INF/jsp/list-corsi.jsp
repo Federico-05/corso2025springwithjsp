@@ -47,7 +47,6 @@
         <th>ID</th>
         <th>Nome</th>
         <th>Docente</th>
-        <th>Anno Accademico</th>
         <th>Discenti Iscritti</th>
         <th>Azioni</th>
     </tr>
@@ -58,7 +57,6 @@
             <td>${c.id}</td>
             <td>${c.nome}</td>
             <td>${c.docente.nome} ${c.docente.cognome}</td>
-            <td>${c.anno_accademico}</td>
             <td>
                 <c:choose>
                     <c:when test="${not empty c.discenti}">

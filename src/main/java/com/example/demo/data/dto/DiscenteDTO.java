@@ -1,41 +1,29 @@
-package com.example.demo.entity;
+package com.example.demo.data.dto;
 
+import com.example.demo.data.entity.Corso;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "discenti")
-public class Discente {
+public class DiscenteDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "nome")
     private String nome;
 
-    @Column(name = "cognome", nullable = false)
     private String cognome;
 
-    @Column(name = "matricola", nullable = false)
-    private int matricola;
-
-    @Column(name = "eta", nullable = false)
     private int eta;
 
-    @Column(name = "citta_residenza", nullable = false)
     private String citta_residenza;
 
-    @ManyToMany(mappedBy = "discenti")
     private List<Corso> corsi = new ArrayList<>();
 
-    public Discente() {}
+    public DiscenteDTO() {}
 
-    public Discente(String nome, String cognome, int matricola, int eta, String citta_residenza) {
+    public DiscenteDTO(String nome, String cognome, int eta, String citta_residenza) {
         this.nome = nome;
         this.cognome = cognome;
-        this.matricola = matricola;
         this.eta = eta;
         this.citta_residenza = citta_residenza;
     }
@@ -62,14 +50,6 @@ public class Discente {
 
     public void setCognome(String cognome) {
         this.cognome = cognome;
-    }
-
-    public int getMatricola() {
-        return matricola;
-    }
-
-    public void setMatricola(int matricola) {
-        this.matricola = matricola;
     }
 
     public int getEta() {

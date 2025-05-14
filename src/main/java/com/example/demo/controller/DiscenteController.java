@@ -1,7 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Corso;
-import com.example.demo.entity.Discente;
+import com.example.demo.converter.Converter;
+import com.example.demo.data.entity.Corso;
+import com.example.demo.data.entity.Discente;
 import com.example.demo.service.CorsoService;
 import com.example.demo.service.DiscenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class DiscenteController {
     @Autowired
     private CorsoService corsoService;
 
+    @Autowired
+    Converter converter;
+
     @GetMapping("/lista")
     public String list(Model model, @RequestParam(name = "filter", required = false) String filter) {
         List<Discente> discenti;
@@ -32,7 +36,7 @@ public class DiscenteController {
         } else {
             discenti = discenteService.findAll();
         }
-        model.addAttribute("discenti", discenti);
+        model.addAttribute("discenti", converter.discente_convertiti(discenti));
         return "list-discenti";
     }
 

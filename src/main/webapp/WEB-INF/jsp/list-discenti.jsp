@@ -47,7 +47,6 @@
         <th>ID</th>
         <th>Nome</th>
         <th>Cognome</th>
-        <th>Matricola</th>
         <th>Eta</th>
         <th>Citta di Residenza</th>
         <th>Azioni</th>
@@ -59,7 +58,6 @@
             <td>${d.id}</td>
             <td>${d.nome}</td>
             <td>${d.cognome}</td>
-            <td>${d.matricola}</td>
             <td>${d.eta}</td>
             <td>${d.citta_residenza}</td>
             <td>
