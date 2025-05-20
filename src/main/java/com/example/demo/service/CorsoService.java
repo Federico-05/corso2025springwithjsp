@@ -1,46 +1,111 @@
+
 package com.example.demo.service;
 
+import com.example.demo.data.dto.CorsoDTO;
+import com.example.demo.data.dto.CorsoFormDTO;
+import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.entity.Corso;
-import com.example.demo.data.entity.Docente;
+import com.example.demo.data.entity.Discente;
 import com.example.demo.repository.CorsoRepository;
+import com.example.demo.repository.DiscenteRepository;
 import com.example.demo.repository.DocenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CorsoService {
 
     @Autowired
-    CorsoRepository corsoRepository;
+    private CorsoRepository corsoRepository;
 
-    public List<Corso> findAll() {
-        return corsoRepository.findAll();
-    }
-
-    public Corso get(Long id) {
-        return corsoRepository.findById(id).orElseThrow();
-    }
-
-    public Corso save(Corso corso) {
-        return corsoRepository.save(corso);
-    }
-
-    public void delete(Long id) {
-        corsoRepository.deleteById(id);
-    }
     @Autowired
     private DocenteRepository docenteRepository;
 
-    public List<Docente> getAllDocenti() {
-        return docenteRepository.findAll();
+    @Autowired
+    private DiscenteRepository discenteRepository;
+
+    // Metodo per visualizzazione lista
+    public List<CorsoDTO> getAllCorsiDTO() {
+        return corsoRepository.findAll(Sort.by("id")).stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<Corso> ord_nome_asc(){
-        return corsoRepository.ord_nome_asc();
+    private CorsoDTO convertToDTO(Corso corso) {
+        CorsoDTO dto = new CorsoDTO();
+        dto.setId(corso.getId());
+        dto.setNome(corso.getNome());
+        dto.setAnnoAccademico(corso.getAnnoAccademico());
+
+        if (corso.getDocente() != null) {
+            dto.setDocenteId(corso.getDocente().getId());
+            dto.setDocenteNomeCompleto(corso.getDocente().getNome() + " " + corso.getDocente().getCognome());
+        }
+
+        if (corso.getDiscenti() != null) {
+            dto.setDiscentiIds(corso.getDiscenti().stream()
+                    .map(Discente::getId)
+                    .collect(Collectors.toList()));
+        }
+
+        return dto;
     }
-    public List<Corso> ord_nome_desc() {
-        return corsoRepository.ord_nome_desc();
+
+    // FullDTO per form modifica
+    public CorsoFormDTO getCorsoById(Long id) {
+        return corsoRepository.findById(id)
+                .map(CorsoFormDTO::new)
+                .orElse(null);
     }
+
+    public void saveCorso(CorsoFormDTO dto) {
+        Corso corso = new Corso();
+        corso.setNome(dto.getNome());
+        corso.setAnnoAccademico(dto.getAnnoAccademico());
+
+        if (dto.getDocenteId() != null) {
+            docenteRepository.findById(dto.getDocenteId()).ifPresent(corso::setDocente);
+        }
+
+        if (dto.getDiscentiIds() != null && !dto.getDiscentiIds().isEmpty()) {
+            List<Discente> discenti = discenteRepository.findAllById(dto.getDiscentiIds());
+            corso.setDiscenti(discenti);
+        }
+
+        corsoRepository.save(corso);
+    }
+
+    public void updateCorso(Long id, CorsoFormDTO dto) {
+        Optional<Corso> optional = corsoRepository.findById(id);
+        if (optional.isPresent()) {
+            Corso corso = optional.get();
+            corso.setNome(dto.getNome());
+            corso.setAnnoAccademico(dto.getAnnoAccademico());
+
+            if (dto.getDocenteId() != null) {
+                docenteRepository.findById(dto.getDocenteId()).ifPresent(corso::setDocente);
+            }
+
+            if (dto.getDiscentiIds() != null) {
+                List<Discente> discenti = discenteRepository.findAllById(dto.getDiscentiIds());
+                corso.setDiscenti(discenti);
+            } else {
+                corso.setDiscenti(List.of());
+            }
+
+            corsoRepository.save(corso);
+        }
+    }
+
+    public void deleteCorso(Long id) {
+        if (corsoRepository.existsById(id)) {
+            corsoRepository.deleteById(id);
+        }
+    }
+
 }

@@ -1,59 +1,65 @@
+
 package com.example.demo.data.dto;
 
-import com.example.demo.data.entity.Discente;
+import com.example.demo.data.entity.Corso;
 import com.example.demo.data.entity.Docente;
-import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 public class CorsoDTO {
+
     private Long id;
-
     private String nome;
+    private Integer annoAccademico;
+    private Long docenteId;
+    private List<Long> discentiIds;
 
-    private Docente docente;
+    // Per la vista
+    private String docenteNomeCompleto;
+    private List<String> nomiDiscenti;
 
-    private List<Discente> discenti = new ArrayList<>();
+    public CorsoDTO() {}
 
-    public List<Discente> getDiscenti() {
-        return discenti;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setDiscenti(List<Discente> discenti) {
-        this.discenti = discenti;
-    }
+    public String getNome() { return nome; }
+    public void setNome(String nome) { this.nome = nome; }
 
-    public CorsoDTO() {
-    }
+    public Integer getAnnoAccademico() { return annoAccademico; }
+    public void setAnnoAccademico(Integer annoAccademico) { this.annoAccademico = annoAccademico; }
 
-    public CorsoDTO(String nome, Docente docente) {
-        this.nome = nome;
-        this.docente = docente;
-    }
+    public Long getDocenteId() { return docenteId; }
+    public void setDocenteId(Long docenteId) { this.docenteId = docenteId; }
 
-    public Long getId() {
-        return id;
-    }
+    public List<Long> getDiscentiIds() { return discentiIds; }
+    public void setDiscentiIds(List<Long> discentiIds) { this.discentiIds = discentiIds; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getDocenteNomeCompleto() { return docenteNomeCompleto; }
+    public void setDocenteNomeCompleto(String docenteNomeCompleto) { this.docenteNomeCompleto = docenteNomeCompleto; }
 
-    public String getNome() {
-        return nome;
-    }
+    public List<String> getNomiDiscenti() { return nomiDiscenti; }
+    public void setNomiDiscenti(List<String> nomiDiscenti) { this.nomiDiscenti = nomiDiscenti; }
+    public CorsoDTO(Corso corso) {
+        this.id = corso.getId();
+        this.nome = corso.getNome();
+        this.annoAccademico = corso.getAnnoAccademico();
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+        Docente docente = corso.getDocente();
+        if (docente != null) {
+            this.docenteId = docente.getId();
+            this.docenteNomeCompleto = docente.getNome() + " " + docente.getCognome();
+        }
 
-    public Docente getDocente() {
-        return docente;
-    }
+        if (corso.getDiscenti() != null) {
+            this.discentiIds = corso.getDiscenti().stream()
+                    .map(d -> d.getId())
+                    .collect(Collectors.toList());
 
-    public void setDocente(Docente docente) {
-        this.docente = docente;
+            this.nomiDiscenti = corso.getDiscenti().stream()
+                    .map(d -> d.getNome() + " " + d.getCognome())
+                    .collect(Collectors.toList());
+        }
     }
 }

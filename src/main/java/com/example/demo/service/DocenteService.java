@@ -1,39 +1,50 @@
 package com.example.demo.service;
 
+import com.example.demo.data.dto.DocenteDTO;
+import com.example.demo.data.dto.DocenteFormDTO;
 import com.example.demo.data.entity.Docente;
 import com.example.demo.repository.DocenteRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocenteService {
 
+    @Autowired
+    private DocenteRepository docenteRepository;
 
     @Autowired
-    DocenteRepository docenteRepository;
+    private ModelMapper modelMapper;
 
-    public List<Docente> findAll() {
-        return docenteRepository.findAll();
+    public List<DocenteDTO> getAllDocenti() {
+        return docenteRepository.findAll().stream()
+                .map(docente -> modelMapper.map(docente, DocenteDTO.class))
+                .collect(Collectors.toList());
     }
 
-    public Docente get(Long id) {
-        return docenteRepository.findById(id).orElseThrow();
+    public DocenteFormDTO getDocenteFormById(Long id) {
+        Docente docente = docenteRepository.findById(id).orElse(null);
+        return modelMapper.map(docente, DocenteFormDTO.class);
     }
 
-    public Docente save(Docente d) {
-        return docenteRepository.save(d);
+    public void saveDocente(DocenteFormDTO dto) {
+        Docente docente = modelMapper.map(dto, Docente.class);
+        docenteRepository.save(docente);
     }
 
-    public void delete(Long id) {
+    public void updateDocente(Long id, DocenteFormDTO dto) {
+        if (docenteRepository.existsById(id)) {
+            Docente docente = modelMapper.map(dto, Docente.class);
+            docente.setId(id);
+            docenteRepository.save(docente);
+        }
+    }
+
+    public void deleteDocente(Long id) {
         docenteRepository.deleteById(id);
-    }
-
-    public List<Docente> ord_nome_asc(){
-        return docenteRepository.ord_nome_asc();
-    }
-    public List<Docente> ord_nome_desc() {
-        return docenteRepository.ord_nome_desc();
     }
 }

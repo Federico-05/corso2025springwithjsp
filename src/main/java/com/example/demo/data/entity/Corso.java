@@ -1,26 +1,25 @@
+
 package com.example.demo.data.entity;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "corso")
-
 public class Corso {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "nome")
     private String nome;
 
-    @Column(nullable = false)
-    private Integer anno_accademico;
+    @Column(name = "anno_accademico", nullable = false)
+    private Integer annoAccademico;
 
-    @ManyToOne
-    @JoinColumn(name = "id_docente", nullable = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_docente", referencedColumnName = "id", nullable = false)
     private Docente docente;
 
     @ManyToMany
@@ -29,25 +28,18 @@ public class Corso {
             joinColumns = @JoinColumn(name = "id_corso"),
             inverseJoinColumns = @JoinColumn(name = "id_discente")
     )
-    private List<Discente> discenti = new ArrayList<>();
+    private List<Discente> discenti;
 
-    public List<Discente> getDiscenti() {
-        return discenti;
-    }
+    /* costruttori */
+    public Corso() {}
 
-    public void setDiscenti(List<Discente> discenti) {
-        this.discenti = discenti;
-    }
-
-    public Corso() {
-    }
-
-    public Corso(String nome, Integer anno_accademico, Docente docente) {
+    public Corso(String nome, Integer annoAccademico, Docente docente) {
         this.nome = nome;
-        this.anno_accademico = anno_accademico;
+        this.annoAccademico = annoAccademico;
         this.docente = docente;
     }
 
+    /* getter e setter */
     public Long getId() {
         return id;
     }
@@ -64,12 +56,12 @@ public class Corso {
         this.nome = nome;
     }
 
-    public Integer getAnno_accademico() {
-        return anno_accademico;
+    public Integer getAnnoAccademico() {
+        return annoAccademico;
     }
 
-    public void setAnno_accademico(Integer anno_accademico) {
-        this.anno_accademico = anno_accademico;
+    public void setAnnoAccademico(Integer annoAccademico) {
+        this.annoAccademico = annoAccademico;
     }
 
     public Docente getDocente() {
@@ -78,5 +70,13 @@ public class Corso {
 
     public void setDocente(Docente docente) {
         this.docente = docente;
+    }
+
+    public List<Discente> getDiscenti() {
+        return discenti;
+    }
+
+    public void setDiscenti(List<Discente> discenti) {
+        this.discenti = discenti;
     }
 }

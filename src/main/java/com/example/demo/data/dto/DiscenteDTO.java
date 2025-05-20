@@ -1,33 +1,29 @@
+
 package com.example.demo.data.dto;
 
-import com.example.demo.data.entity.Corso;
-import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DiscenteDTO {
 
     private Long id;
-
     private String nome;
-
     private String cognome;
+    private Integer eta;
+    private String cittaResidenza;
+    private List<Long> corsiIds;
 
-    private int eta;
-
-    private String citta_residenza;
-
-    private List<Corso> corsi = new ArrayList<>();
-
+    /* Costruttori */
     public DiscenteDTO() {}
 
-    public DiscenteDTO(String nome, String cognome, int eta, String citta_residenza) {
+    public DiscenteDTO(Long id, String nome, String cognome, Integer eta, String cittaResidenza) {
+        this.id = id;
         this.nome = nome;
         this.cognome = cognome;
         this.eta = eta;
-        this.citta_residenza = citta_residenza;
+        this.cittaResidenza = cittaResidenza;
     }
 
+    /* Getters e Setters */
     public Long getId() {
         return id;
     }
@@ -52,27 +48,39 @@ public class DiscenteDTO {
         this.cognome = cognome;
     }
 
-    public int getEta() {
+    public Integer getEta() {
         return eta;
     }
 
-    public void setEta(int eta) {
+    public void setEta(Integer eta) {
         this.eta = eta;
     }
 
-    public String getCitta_residenza() {
-        return citta_residenza;
+    public String getCittaResidenza() {
+        return cittaResidenza;
     }
 
-    public void setCitta_residenza(String citta_residenza) {
-        this.citta_residenza = citta_residenza;
+    public void setCittaResidenza(String cittaResidenza) {
+        this.cittaResidenza = cittaResidenza;
     }
 
-    public List<Corso> getCorsi() {
-        return corsi;
+    public List<Long> getCorsiIds() {
+        return corsiIds;
     }
 
-    public void setCorsi(List<Corso> corsi) {
-        this.corsi = corsi;
+    public void setCorsiIds(List<Long> corsiIds) {
+        this.corsiIds = corsiIds;
+    }
+
+    @Override
+    public String toString() {
+        return "DiscenteDTO{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", eta=" + eta +
+                ", cittaResidenza='" + cittaResidenza + '\'' +
+                ", corsiIds=" + corsiIds +
+                '}';
     }
 }

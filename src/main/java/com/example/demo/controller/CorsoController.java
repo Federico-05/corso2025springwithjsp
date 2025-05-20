@@ -1,9 +1,13 @@
 package com.example.demo.controller;
 
-import com.example.demo.converter.Converter;
+import com.example.demo.data.dto.CorsoDTO;
+import com.example.demo.data.dto.CorsoFormDTO;
+import com.example.demo.data.dto.DiscenteDTO;
+import com.example.demo.data.dto.DocenteDTO;
 import com.example.demo.data.entity.Corso;
-import com.example.demo.data.entity.Docente;
+import com.example.demo.data.entity.Discente;
 import com.example.demo.service.CorsoService;
+import com.example.demo.service.DiscenteService;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +16,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/corsi")
@@ -24,89 +30,75 @@ public class CorsoController {
     private DocenteService docenteService;
 
     @Autowired
-    private com.example.demo.repository.DiscenteRepository discenteRepository;
+    private DiscenteService discenteService;
 
-    @Autowired
-    Converter converter;
-
+    // Mostra lista corsi (usa DTO)
     @GetMapping("/lista")
-    public String list(Model model, @RequestParam(name = "filter", required = false) String filter) {
-        List<Corso> corsi;
-        if ("asc".equalsIgnoreCase(filter)) {
-            corsi = corsoService.ord_nome_asc();
-        }else if ("desc".equalsIgnoreCase(filter)) {
-            corsi = corsoService.ord_nome_desc();
-        } else {
-            corsi = corsoService.findAll();
-        }
-        model.addAttribute("corsi", converter.corso_convertiti(corsi));
+    public String listaCorsi(Model model) {
+        List<CorsoDTO> corsi = corsoService.getAllCorsiDTO();
+
+        Map<Long, DocenteDTO> docentiMap = docenteService.getAllDocenti().stream()
+                .collect(Collectors.toMap(DocenteDTO::getId, d -> d));
+        Map<Long, DiscenteDTO> discentiMap = discenteService.getAllDiscenti().stream()
+                .collect(Collectors.toMap(DiscenteDTO::getId, d -> d));
+
+        model.addAttribute("corsi", corsi);
+        model.addAttribute("docentiMap", docentiMap);
+        model.addAttribute("discentiMap", discentiMap);
+
         return "list-corsi";
     }
 
+    // Form nuovo corso
     @GetMapping("/nuovo")
     public String showAdd(Model model) {
-        model.addAttribute("corso", new Corso());
-        model.addAttribute("docenti", docenteService.findAll());
-        model.addAttribute("tuttiDiscenti", discenteRepository.findAll());
+        model.addAttribute("corso", new CorsoFormDTO());
+        model.addAttribute("docenti", docenteService.getAllDocenti());
+        model.addAttribute("discenti", discenteService.getAllDiscenti());
         return "form-corso";
     }
 
+    // Salva nuovo corso
     @PostMapping("/salva")
-    public String create(@ModelAttribute("corso") Corso corso,
-                         @RequestParam("id_docente") Long docenteId,
-                         @RequestParam(value = "discenteIds", required = false) List<Long> discenteIds,
-                         BindingResult br) {
-        if (br.hasErrors()) {
+    public String salvaNuovo(@ModelAttribute("corso") CorsoFormDTO corsoDTO, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("docenti", docenteService.getAllDocenti());
+            model.addAttribute("discenti", discenteService.getAllDiscenti());
             return "form-corso";
         }
-        Docente docente = docenteService.get(docenteId);
-        corso.setDocente(docente);
-
-        if (discenteIds != null) {
-            corso.setDiscenti(discenteRepository.findAllById(discenteIds));
-        } else {
-            corso.setDiscenti(List.of());
-        }
-
-        corsoService.save(corso);
+        corsoService.saveCorso(corsoDTO);
         return "redirect:/corsi/lista";
     }
 
+    // Form modifica corso
     @GetMapping("/{id}/edit")
     public String showEdit(@PathVariable Long id, Model model) {
-        Corso corso = corsoService.get(id);
-        model.addAttribute("corso", corso);
-        model.addAttribute("docenti", docenteService.findAll());
-        model.addAttribute("tuttiDiscenti", discenteRepository.findAll());
+        CorsoFormDTO corsoDTO = corsoService.getCorsoById(id);
+        if (corsoDTO == null) {
+            return "redirect:/corsi/lista";
+        }
+        model.addAttribute("corso", corsoDTO);
+        model.addAttribute("docenti", docenteService.getAllDocenti());
+        model.addAttribute("discenti", discenteService.getAllDiscenti());
         return "form-corso";
     }
 
-    @PostMapping("/{id}")
-    public String update(@PathVariable Long id,
-                         @ModelAttribute("corso") Corso corso,
-                         @RequestParam("id_docente") Long docenteId,
-                         @RequestParam(value = "discenteIds", required = false) List<Long> discenteIds,
-                         BindingResult br) {
-        if (br.hasErrors()) {
+    // Salva aggiornamento corso
+    @PostMapping("/{id}/salva")
+    public String updateCorso(@PathVariable Long id, @ModelAttribute("corso") CorsoFormDTO corsoDTO, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("docenti", docenteService.getAllDocenti());
+            model.addAttribute("discenti", discenteService.getAllDiscenti());
             return "form-corso";
         }
-        corso.setId(id);
-        Docente docente = docenteService.get(docenteId);
-        corso.setDocente(docente);
-
-        if (discenteIds != null) {
-            corso.setDiscenti(discenteRepository.findAllById(discenteIds));
-        } else {
-            corso.setDiscenti(List.of());
-        }
-
-        corsoService.save(corso);
+        corsoService.updateCorso(id, corsoDTO);
         return "redirect:/corsi/lista";
     }
 
+    // Elimina corso
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
-        corsoService.delete(id);
+        corsoService.deleteCorso(id);
         return "redirect:/corsi/lista";
     }
 }

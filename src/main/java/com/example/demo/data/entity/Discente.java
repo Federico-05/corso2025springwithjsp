@@ -1,3 +1,4 @@
+
 package com.example.demo.data.entity;
 
 import jakarta.persistence.*;
@@ -18,28 +19,37 @@ public class Discente {
     @Column(name = "cognome", nullable = false)
     private String cognome;
 
-    @Column(name = "matricola", nullable = false)
-    private int matricola;
+    @Column(name = "matricola", unique = true)
+    private Integer matricola;
 
     @Column(name = "eta", nullable = false)
-    private int eta;
+    private Integer eta;
 
     @Column(name = "citta_residenza", nullable = false)
-    private String citta_residenza;
+    private String cittaResidenza;
 
     @ManyToMany(mappedBy = "discenti")
     private List<Corso> corsi = new ArrayList<>();
 
+    /* costruttori */
     public Discente() {}
 
-    public Discente(String nome, String cognome, int matricola, int eta, String citta_residenza) {
+    public Discente(String nome, String cognome, Integer matricola, Integer eta, String cittaResidenza) {
         this.nome = nome;
         this.cognome = cognome;
         this.matricola = matricola;
         this.eta = eta;
-        this.citta_residenza = citta_residenza;
+        this.cittaResidenza = cittaResidenza;
     }
 
+    public Discente(String nome, String cognome, Integer eta, String cittaResidenza) {
+        this.nome = nome;
+        this.cognome = cognome;
+        this.eta = eta;
+        this.cittaResidenza = cittaResidenza;
+    }
+
+    /* getter e setter */
     public Long getId() {
         return id;
     }
@@ -64,28 +74,28 @@ public class Discente {
         this.cognome = cognome;
     }
 
-    public int getMatricola() {
+    public Integer getMatricola() {
         return matricola;
     }
 
-    public void setMatricola(int matricola) {
+    public void setMatricola(Integer matricola) {
         this.matricola = matricola;
     }
 
-    public int getEta() {
+    public Integer getEta() {
         return eta;
     }
 
-    public void setEta(int eta) {
+    public void setEta(Integer eta) {
         this.eta = eta;
     }
 
-    public String getCitta_residenza() {
-        return citta_residenza;
+    public String getCittaResidenza() {
+        return cittaResidenza;
     }
 
-    public void setCitta_residenza(String citta_residenza) {
-        this.citta_residenza = citta_residenza;
+    public void setCittaResidenza(String cittaResidenza) {
+        this.cittaResidenza = cittaResidenza;
     }
 
     public List<Corso> getCorsi() {

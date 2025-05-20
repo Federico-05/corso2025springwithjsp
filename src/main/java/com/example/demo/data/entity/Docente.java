@@ -1,6 +1,9 @@
+
 package com.example.demo.data.entity;
 
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "docenti")
@@ -16,16 +19,21 @@ public class Docente {
     @Column(name = "cognome", nullable = false)
     private String cognome;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
-
+    @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    private List<Corso> corsi;
+    /* costruttori */
     public Docente() {}
-    public Docente(String nome, String cognome, String email) {
+    public Docente(Long id ,String nome, String cognome, String email) {
         this.nome = nome;
         this.cognome = cognome;
         this.email = email;
     }
-
+    public Docente(String nome, String cognome) {
+        this.nome = nome;
+        this.cognome = cognome;
+    }
     public Long getId() {
         return id;
     }
@@ -56,5 +64,13 @@ public class Docente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Corso> getCorsi() {
+        return corsi;
+    }
+
+    public void setCorsi(List<Corso> corsi) {
+        this.corsi = corsi;
     }
 }
