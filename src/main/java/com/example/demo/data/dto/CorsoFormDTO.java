@@ -16,9 +16,13 @@ public class CorsoFormDTO {
     private Docente docente;
     private List<Discente> discenti = new ArrayList<>();
 
-    // Binding via form
+    // Binding via form (ID)
     private Long docenteId;
     private List<Long> discentiIds = new ArrayList<>();
+
+    // Nuovi campi per update tramite nome e cognome
+    private String docenteNomeCompleto;
+    private List<String> nomiDiscenti = new ArrayList<>();
 
     public CorsoFormDTO() {}
 
@@ -35,9 +39,19 @@ public class CorsoFormDTO {
                 this.discentiIds.add(d.getId());
             }
         }
+
+        // Per update: prepara nome completo docente e lista nomi discenti
+        if (corso.getDocente() != null) {
+            this.docenteNomeCompleto = corso.getDocente().getNome() + " " + corso.getDocente().getCognome();
+        }
+        if (corso.getDiscenti() != null) {
+            for (Discente d : corso.getDiscenti()) {
+                this.nomiDiscenti.add(d.getNome() + " " + d.getCognome());
+            }
+        }
     }
 
-    // Getter e Setter
+    // getter e setter per tutti i campi
 
     public Long getId() {
         return id;
@@ -93,5 +107,21 @@ public class CorsoFormDTO {
 
     public void setDiscentiIds(List<Long> discentiIds) {
         this.discentiIds = discentiIds;
+    }
+
+    public String getDocenteNomeCompleto() {
+        return docenteNomeCompleto;
+    }
+
+    public void setDocenteNomeCompleto(String docenteNomeCompleto) {
+        this.docenteNomeCompleto = docenteNomeCompleto;
+    }
+
+    public List<String> getNomiDiscenti() {
+        return nomiDiscenti;
+    }
+
+    public void setNomiDiscenti(List<String> nomiDiscenti) {
+        this.nomiDiscenti = nomiDiscenti;
     }
 }

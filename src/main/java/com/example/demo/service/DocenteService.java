@@ -36,13 +36,19 @@ public class DocenteService {
         docenteRepository.save(docente);
     }
 
-    public void updateDocente(Long id, DocenteFormDTO dto) {
-        if (docenteRepository.existsById(id)) {
-            Docente docente = modelMapper.map(dto, Docente.class);
-            docente.setId(id);
-            docenteRepository.save(docente);
-        }
+    public DocenteDTO updateDocente(Long id, DocenteFormDTO docenteFormDTO) {
+        Docente existingDocente = docenteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Docente non trovato"));
+
+        existingDocente.setNome(docenteFormDTO.getNome());
+        existingDocente.setCognome(docenteFormDTO.getCognome());
+        existingDocente.setEmail(docenteFormDTO.getEmail());
+
+        Docente updatedDocente = docenteRepository.save(existingDocente);
+
+        return modelMapper.map(updatedDocente, DocenteDTO.class);
     }
+
 
     public void deleteDocente(Long id) {
         docenteRepository.deleteById(id);

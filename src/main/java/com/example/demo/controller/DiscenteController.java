@@ -2,17 +2,19 @@ package com.example.demo.controller;
 
 import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.dto.DiscenteFormDTO;
+import com.example.demo.data.dto.DocenteDTO;
+import com.example.demo.data.dto.DocenteFormDTO;
 import com.example.demo.data.entity.Discente;
 import com.example.demo.service.DiscenteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/discenti")
 public class DiscenteController {
 
@@ -20,72 +22,31 @@ public class DiscenteController {
     private DiscenteService discenteService;
 
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<DiscenteDTO> discentiDTO = discenteService.getAllDiscenti();
-        model.addAttribute("discenti", discentiDTO);
-        return "list-discenti";
+    public List<DiscenteDTO> list(Model model) {
+        return discenteService.getAllDiscenti();
     }
 
     @GetMapping("/nuovo")
-    public String showAdd(Model model) {
-        model.addAttribute("discente", new DiscenteFormDTO());
-        return "form-discente";
+    public DiscenteFormDTO showAdd(Model model) {
+        return new DiscenteFormDTO();
     }
 
     @PostMapping("/nuovo")
-    public String create(@ModelAttribute("discente") DiscenteFormDTO discenteDTO, BindingResult result) {
-        if (discenteDTO.getNome() == null || discenteDTO.getNome().isEmpty()) {
-            result.rejectValue("nome", "nome.empty", "Il nome non può essere vuoto.");
-        }
-        if (discenteDTO.getCognome() == null || discenteDTO.getCognome().isEmpty()) {
-            result.rejectValue("cognome", "cognome.empty", "Il cognome non può essere vuoto.");
-        }
-        if (discenteDTO.getMatricola() == null) {
-            result.rejectValue("matricola", "matricola.empty", "La matricola è obbligatoria.");
-        }
-
-        if (result.hasErrors()) {
-            return "form-discente";
-        }
-
+    public void create(@RequestBody DiscenteFormDTO discenteDTO) {
         discenteService.saveDiscente(discenteDTO);
-        return "redirect:/discenti/lista";
     }
 
-    @GetMapping("/{id}/edit")
-    public String showEdit(@PathVariable Long id, Model model) {
-        DiscenteFormDTO discenteDTO = discenteService.getDiscenteFormById(id);
-        if (discenteDTO == null) {
-            return "redirect:/discenti/lista";
-        }
-        model.addAttribute("discente", discenteDTO);
-        return "form-discente";
+
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<DiscenteDTO> updateDiscente(@PathVariable Long id, @RequestBody DiscenteFormDTO discenteFormDTO) {
+        DiscenteDTO updateDiscente = discenteService.updateDiscente(id, discenteFormDTO);
+        return ResponseEntity.ok(updateDiscente);
     }
 
-    @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute("discente") DiscenteFormDTO discenteDTO, BindingResult result) {
-        if (discenteDTO.getNome() == null || discenteDTO.getNome().isEmpty()) {
-            result.rejectValue("nome", "nome.empty", "Il nome non può essere vuoto.");
-        }
-        if (discenteDTO.getCognome() == null || discenteDTO.getCognome().isEmpty()) {
-            result.rejectValue("cognome", "cognome.empty", "Il cognome non può essere vuoto.");
-        }
-        if (discenteDTO.getMatricola() == null) {
-            result.rejectValue("matricola", "matricola.empty", "La matricola è obbligatoria.");
-        }
-
-        if (result.hasErrors()) {
-            return "form-discente";
-        }
-
-        discenteService.updateDiscente(id, discenteDTO);
-        return "redirect:/discenti/lista";
-    }
-
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         discenteService.deleteDiscente(id);
-        return "redirect:/discenti/lista";
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/asc")

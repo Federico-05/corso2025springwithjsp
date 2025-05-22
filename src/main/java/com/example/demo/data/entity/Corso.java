@@ -30,7 +30,7 @@ public class Corso {
     )
     private List<Discente> discenti;
 
-    /* costruttori */
+
     public Corso() {}
 
     public Corso(String nome, Integer annoAccademico, Docente docente) {

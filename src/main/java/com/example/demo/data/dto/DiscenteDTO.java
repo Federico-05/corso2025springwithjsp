@@ -5,18 +5,15 @@ import java.util.List;
 
 public class DiscenteDTO {
 
-    private Long id;
     private String nome;
     private String cognome;
     private Integer eta;
     private String cittaResidenza;
-    private List<Long> corsiIds;
 
     /* Costruttori */
     public DiscenteDTO() {}
 
-    public DiscenteDTO(Long id, String nome, String cognome, Integer eta, String cittaResidenza) {
-        this.id = id;
+    public DiscenteDTO( String nome, String cognome, Integer eta, String cittaResidenza) {
         this.nome = nome;
         this.cognome = cognome;
         this.eta = eta;
@@ -24,13 +21,6 @@ public class DiscenteDTO {
     }
 
     /* Getters e Setters */
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
@@ -64,23 +54,14 @@ public class DiscenteDTO {
         this.cittaResidenza = cittaResidenza;
     }
 
-    public List<Long> getCorsiIds() {
-        return corsiIds;
-    }
-
-    public void setCorsiIds(List<Long> corsiIds) {
-        this.corsiIds = corsiIds;
-    }
 
     @Override
     public String toString() {
         return "DiscenteDTO{" +
-                "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
                 ", eta=" + eta +
                 ", cittaResidenza='" + cittaResidenza + '\'' +
-                ", corsiIds=" + corsiIds +
                 '}';
     }
 }

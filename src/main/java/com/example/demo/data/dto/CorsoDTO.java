@@ -3,6 +3,7 @@ package com.example.demo.data.dto;
 
 import com.example.demo.data.entity.Corso;
 import com.example.demo.data.entity.Docente;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,9 +31,11 @@ public class CorsoDTO {
     public Integer getAnnoAccademico() { return annoAccademico; }
     public void setAnnoAccademico(Integer annoAccademico) { this.annoAccademico = annoAccademico; }
 
+    @JsonIgnore
     public Long getDocenteId() { return docenteId; }
     public void setDocenteId(Long docenteId) { this.docenteId = docenteId; }
 
+    @JsonIgnore
     public List<Long> getDiscentiIds() { return discentiIds; }
     public void setDiscentiIds(List<Long> discentiIds) { this.discentiIds = discentiIds; }
 
@@ -52,14 +55,15 @@ public class CorsoDTO {
             this.docenteNomeCompleto = docente.getNome() + " " + docente.getCognome();
         }
 
-        if (corso.getDiscenti() != null) {
+        if (corso.getDiscenti() != null && !corso.getDiscenti().isEmpty()) {
             this.discentiIds = corso.getDiscenti().stream()
-                    .map(d -> d.getId())
+                    .map(discente -> discente.getId())
                     .collect(Collectors.toList());
 
             this.nomiDiscenti = corso.getDiscenti().stream()
-                    .map(d -> d.getNome() + " " + d.getCognome())
+                    .map(discente -> discente.getNome() + " " + discente.getCognome())
                     .collect(Collectors.toList());
         }
     }
+
 }

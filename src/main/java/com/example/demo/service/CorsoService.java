@@ -1,9 +1,9 @@
 
 package com.example.demo.service;
 
+import org.modelmapper.ModelMapper;
 import com.example.demo.data.dto.CorsoDTO;
 import com.example.demo.data.dto.CorsoFormDTO;
-import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.entity.Corso;
 import com.example.demo.data.entity.Discente;
 import com.example.demo.repository.CorsoRepository;
@@ -14,11 +14,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class CorsoService {
+
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     @Autowired
     private CorsoRepository corsoRepository;
@@ -47,60 +51,87 @@ public class CorsoService {
             dto.setDocenteNomeCompleto(corso.getDocente().getNome() + " " + corso.getDocente().getCognome());
         }
 
-        if (corso.getDiscenti() != null) {
+        if (corso.getDiscenti() != null && !corso.getDiscenti().isEmpty()) {
             dto.setDiscentiIds(corso.getDiscenti().stream()
                     .map(Discente::getId)
+                    .collect(Collectors.toList()));
+
+            dto.setNomiDiscenti(corso.getDiscenti().stream()
+                    .map(d -> d.getNome() + " " + d.getCognome())
                     .collect(Collectors.toList()));
         }
 
         return dto;
     }
 
-    // FullDTO per form modifica
+
     public CorsoFormDTO getCorsoById(Long id) {
         return corsoRepository.findById(id)
                 .map(CorsoFormDTO::new)
                 .orElse(null);
     }
 
-    public void saveCorso(CorsoFormDTO dto) {
+    public CorsoDTO saveCorso(CorsoFormDTO dto) {
         Corso corso = new Corso();
         corso.setNome(dto.getNome());
         corso.setAnnoAccademico(dto.getAnnoAccademico());
 
-        if (dto.getDocenteId() != null) {
-            docenteRepository.findById(dto.getDocenteId()).ifPresent(corso::setDocente);
+
+        if (dto.getDocenteNomeCompleto() != null) {
+            String[] nomeDocente = dto.getDocenteNomeCompleto().split(" ", 2);
+            docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
+                    .ifPresent(corso::setDocente);
         }
 
-        if (dto.getDiscentiIds() != null && !dto.getDiscentiIds().isEmpty()) {
-            List<Discente> discenti = discenteRepository.findAllById(dto.getDiscentiIds());
+
+        if (dto.getNomiDiscenti() != null && !dto.getNomiDiscenti().isEmpty()) {
+            List<Discente> discenti = dto.getNomiDiscenti().stream()
+                    .map(nomeCompleto -> {
+                        String[] nome = nomeCompleto.split(" ", 2);
+                        return discenteRepository.findByNomeAndCognome(nome[0], nome[1]).orElse(null);
+                    })
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
             corso.setDiscenti(discenti);
         }
 
-        corsoRepository.save(corso);
+        Corso savedCorso = corsoRepository.save(corso);
+        return convertToDTO(savedCorso);
     }
 
-    public void updateCorso(Long id, CorsoFormDTO dto) {
-        Optional<Corso> optional = corsoRepository.findById(id);
-        if (optional.isPresent()) {
-            Corso corso = optional.get();
-            corso.setNome(dto.getNome());
-            corso.setAnnoAccademico(dto.getAnnoAccademico());
+    public CorsoDTO updateCorso(Long id, CorsoFormDTO dto) {
+        return corsoRepository.findById(id)
+                .map(corso -> {
+                    corso.setNome(dto.getNome());
+                    corso.setAnnoAccademico(dto.getAnnoAccademico());
 
-            if (dto.getDocenteId() != null) {
-                docenteRepository.findById(dto.getDocenteId()).ifPresent(corso::setDocente);
-            }
+                    if (dto.getDocenteNomeCompleto() != null) {
+                        String[] nomeDocente = dto.getDocenteNomeCompleto().split(" ", 2);
+                        corso.setDocente(docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
+                                .orElse(null));
+                    } else {
+                        corso.setDocente(null);
+                    }
 
-            if (dto.getDiscentiIds() != null) {
-                List<Discente> discenti = discenteRepository.findAllById(dto.getDiscentiIds());
-                corso.setDiscenti(discenti);
-            } else {
-                corso.setDiscenti(List.of());
-            }
+                    if (dto.getNomiDiscenti() != null) {
+                        List<Discente> discenti = dto.getNomiDiscenti().stream()
+                                .map(nomeCompleto -> {
+                                    String[] nome = nomeCompleto.split(" ", 2);
+                                    return discenteRepository.findByNomeAndCognome(nome[0], nome[1])
+                                            .orElse(null);
+                                })
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList());
+                        corso.setDiscenti(discenti);
+                    } else {
+                        corso.setDiscenti(List.of());
+                    }
 
-            corsoRepository.save(corso);
-        }
+                    return convertToDTO(corsoRepository.save(corso));
+                })
+                .orElse(null);
     }
+
 
     public void deleteCorso(Long id) {
         if (corsoRepository.existsById(id)) {

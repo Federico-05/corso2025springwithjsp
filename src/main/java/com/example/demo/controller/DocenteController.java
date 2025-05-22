@@ -4,14 +4,13 @@ import com.example.demo.data.dto.DocenteDTO;
 import com.example.demo.data.dto.DocenteFormDTO;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/docenti")
 public class DocenteController {
 
@@ -19,40 +18,31 @@ public class DocenteController {
     private DocenteService docenteService;
 
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<DocenteDTO> docenti = docenteService.getAllDocenti();
-        model.addAttribute("docenti", docenti);
-        return "list-docenti";
+    public List<DocenteDTO> list(Model model) {
+        return docenteService.getAllDocenti();
     }
 
     @GetMapping("/nuovo")
-    public String showAdd(Model model) {
-        model.addAttribute("docente", new DocenteFormDTO());
-        return "form-docente";
+    public DocenteFormDTO showAdd(Model model) {
+        return new DocenteFormDTO();
     }
 
     @PostMapping("/nuovo")
-    public String create(@ModelAttribute("docente") DocenteFormDTO docenteDTO, BindingResult result) {
+    public void create(@RequestBody DocenteFormDTO docenteDTO) {
         docenteService.saveDocente(docenteDTO);
-        return "redirect:/docenti/lista";
     }
 
-    @GetMapping("/{id}/edit")
-    public String showEdit(@PathVariable Long id, Model model) {
-        DocenteFormDTO docenteDTO = docenteService.getDocenteFormById(id);
-        model.addAttribute("docente", docenteDTO);
-        return "form-docente";
+
+    @PutMapping("/{id}/edit")
+    public ResponseEntity<DocenteDTO> updateDocente(@PathVariable Long id, @RequestBody DocenteFormDTO docenteFormDTO) {
+        DocenteDTO updateDocente = docenteService.updateDocente(id, docenteFormDTO);
+        return ResponseEntity.ok(updateDocente);
     }
 
-    @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute("docente") DocenteFormDTO docenteDTO, BindingResult result) {
-        docenteService.updateDocente(id, docenteDTO);
-        return "redirect:/docenti/lista";
-    }
 
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         docenteService.deleteDocente(id);
-        return "redirect:/docenti/lista";
+        return ResponseEntity.noContent().build();
     }
 }

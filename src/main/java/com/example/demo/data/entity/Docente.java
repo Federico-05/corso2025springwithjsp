@@ -23,7 +23,7 @@ public class Docente {
     private String email;
     @OneToMany(mappedBy = "docente", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     private List<Corso> corsi;
-    /* costruttori */
+
     public Docente() {}
     public Docente(Long id ,String nome, String cognome, String email) {
         this.nome = nome;

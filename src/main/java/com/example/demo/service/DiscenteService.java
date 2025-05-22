@@ -2,7 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.dto.DiscenteFormDTO;
+import com.example.demo.data.dto.DocenteDTO;
+import com.example.demo.data.dto.DocenteFormDTO;
 import com.example.demo.data.entity.Discente;
+import com.example.demo.data.entity.Docente;
 import com.example.demo.repository.DiscenteRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,17 +39,19 @@ public class DiscenteService {
         discenteRepository.save(discente);
     }
 
-    public void updateDiscente(Long id, DiscenteFormDTO formDTO) {
-        Discente discente = discenteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Discente non trovato con ID: " + id));
+    public DiscenteDTO updateDiscente(Long id, DiscenteFormDTO discenteFormDTO) {
+        Discente existingDiscente = discenteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Discente non trovato"));
 
-        discente.setNome(formDTO.getNome());
-        discente.setCognome(formDTO.getCognome());
-        discente.setMatricola(formDTO.getMatricola());
-        discente.setEta(formDTO.getEta());
-        discente.setCittaResidenza(formDTO.getCittaResidenza());
+        existingDiscente.setNome(discenteFormDTO.getNome());
+        existingDiscente.setCognome(discenteFormDTO.getCognome());
+        existingDiscente.setEta(discenteFormDTO.getEta());
+        existingDiscente.setCittaResidenza(discenteFormDTO.getCittaResidenza());
+        existingDiscente.setMatricola(discenteFormDTO.getMatricola());
 
-        discenteRepository.save(discente);
+        Discente updatedDiscente = discenteRepository.save(existingDiscente);
+
+        return modelMapper.map(updatedDiscente, DiscenteDTO.class);
     }
 
     public void deleteDiscente(Long id) {
