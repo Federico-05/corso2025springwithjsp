@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface MappingCorso{
+public interface MappingCorso{//prova
     CorsoDTO toDto(Corso corso);
     Corso toEntity(CorsoDTO corsoDTO);
 }
