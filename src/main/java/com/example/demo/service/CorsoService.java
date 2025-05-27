@@ -1,6 +1,7 @@
 
 package com.example.demo.service;
 
+import com.example.demo.data.entity.Docente;
 import org.modelmapper.ModelMapper;
 import com.example.demo.data.dto.CorsoDTO;
 import com.example.demo.data.dto.CorsoFormDTO;
@@ -76,19 +77,33 @@ public class CorsoService {
         corso.setNome(dto.getNome());
         corso.setAnnoAccademico(dto.getAnnoAccademico());
 
-
         if (dto.getDocenteNomeCompleto() != null) {
             String[] nomeDocente = dto.getDocenteNomeCompleto().split(" ", 2);
-            docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
-                    .ifPresent(corso::setDocente);
+            if (nomeDocente.length == 2) {
+                corso.setDocente(docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
+                        .orElseGet(() -> {
+                            Docente nuovoDocente = new Docente();
+                            nuovoDocente.setNome(nomeDocente[0]);
+                            nuovoDocente.setCognome(nomeDocente[1]);
+                            return docenteRepository.save(nuovoDocente);
+                        }));
+            }
         }
-
 
         if (dto.getNomiDiscenti() != null && !dto.getNomiDiscenti().isEmpty()) {
             List<Discente> discenti = dto.getNomiDiscenti().stream()
                     .map(nomeCompleto -> {
                         String[] nome = nomeCompleto.split(" ", 2);
-                        return discenteRepository.findByNomeAndCognome(nome[0], nome[1]).orElse(null);
+                        if (nome.length == 2) {
+                            return discenteRepository.findByNomeAndCognome(nome[0], nome[1])
+                                    .orElseGet(() -> {
+                                        Discente nuovoDiscente = new Discente();
+                                        nuovoDiscente.setNome(nome[0]);
+                                        nuovoDiscente.setCognome(nome[1]);
+                                        return discenteRepository.save(nuovoDiscente);
+                                    });
+                        }
+                        return null;
                     })
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
@@ -107,9 +122,17 @@ public class CorsoService {
 
                     if (dto.getDocenteNomeCompleto() != null) {
                         String[] nomeDocente = dto.getDocenteNomeCompleto().split(" ", 2);
-                        corso.setDocente(docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
-                                .orElse(null));
-                    } else {
+                        if (nomeDocente.length == 2) {
+                            corso.setDocente(docenteRepository.findByNomeAndCognome(nomeDocente[0], nomeDocente[1])
+                                    .orElseGet(() -> {
+                                        Docente nuovoDocente = new Docente();
+                                        nuovoDocente.setNome(nomeDocente[0]);
+                                        nuovoDocente.setCognome(nomeDocente[1]);
+                                        return docenteRepository.save(nuovoDocente);
+                                    }));
+                        }
+                    }
+                    else {
                         corso.setDocente(null);
                     }
 
@@ -117,8 +140,16 @@ public class CorsoService {
                         List<Discente> discenti = dto.getNomiDiscenti().stream()
                                 .map(nomeCompleto -> {
                                     String[] nome = nomeCompleto.split(" ", 2);
-                                    return discenteRepository.findByNomeAndCognome(nome[0], nome[1])
-                                            .orElse(null);
+                                    if (nome.length == 2) {
+                                        return discenteRepository.findByNomeAndCognome(nome[0], nome[1])
+                                                .orElseGet(() -> {
+                                                    Discente nuovoDiscente = new Discente();
+                                                    nuovoDiscente.setNome(nome[0]);
+                                                    nuovoDiscente.setCognome(nome[1]);
+                                                    return discenteRepository.save(nuovoDiscente);
+                                                });
+                                    }
+                                    return null;
                                 })
                                 .filter(Objects::nonNull)
                                 .collect(Collectors.toList());

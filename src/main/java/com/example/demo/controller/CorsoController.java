@@ -51,9 +51,9 @@ public class CorsoController {
         return ResponseEntity.ok(updateCorso);
     }
 
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         corsoService.deleteCorso(id);
-        return "redirect:/corsi/lista";
+        return ResponseEntity.noContent().build();
     }
 }
