@@ -21,8 +21,8 @@ public class Docente {
 
     @Column(name = "email", unique = true)
     private String email;
-    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
-    private List<Corso> corsi;
+//    @OneToMany(mappedBy = "docente", fetch = FetchType.LAZY)
+//    private List<Corso> corsi;
 
     public Docente() {}
     public Docente(Long id ,String nome, String cognome, String email) {
@@ -66,11 +66,11 @@ public class Docente {
         this.email = email;
     }
 
-    public List<Corso> getCorsi() {
-        return corsi;
-    }
-
-    public void setCorsi(List<Corso> corsi) {
-        this.corsi = corsi;
-    }
+//    public List<Corso> getCorsi() {
+//        return corsi;
+//    }
+//
+//    public void setCorsi(List<Corso> corsi) {
+//        this.corsi = corsi;
+//    }
 }

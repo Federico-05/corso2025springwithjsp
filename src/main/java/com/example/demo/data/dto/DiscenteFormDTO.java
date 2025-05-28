@@ -12,7 +12,6 @@ public class DiscenteFormDTO {
     private String cognome;
     private Integer matricola;
     private String cittaResidenza;
-    private List<CorsoDTO> corsi;
 
     public DiscenteFormDTO() {}
 
@@ -23,11 +22,7 @@ public class DiscenteFormDTO {
         this.cognome = discente.getCognome();
         this.matricola = discente.getMatricola();
         this.cittaResidenza = discente.getCittaResidenza();
-        if (discente.getCorsi() != null) {
-            this.corsi = discente.getCorsi().stream()
-                    .map(CorsoDTO::new)
-                    .collect(Collectors.toList());
-        }
+
     }
 
 
@@ -49,6 +44,4 @@ public class DiscenteFormDTO {
     public String getCittaResidenza() { return cittaResidenza; }
     public void setCittaResidenza(String cittaResidenza) { this.cittaResidenza = cittaResidenza; }
 
-    public List<CorsoDTO> getCorsi() { return corsi; }
-    public void setCorsi(List<CorsoDTO> corsi) { this.corsi = corsi; }
 }

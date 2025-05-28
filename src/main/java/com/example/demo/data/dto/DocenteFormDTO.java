@@ -9,7 +9,7 @@ public class DocenteFormDTO {
     private String nome;
     private String cognome;
     private String email;
-    private List<CorsoDTO> corsi;
+//    private List<CorsoDTO> corsi;
 
     // Costruttore vuoto
     public DocenteFormDTO() {}
@@ -20,11 +20,11 @@ public class DocenteFormDTO {
         this.nome = docente.getNome();
         this.cognome = docente.getCognome();
         this.email = docente.getEmail();
-        if (docente.getCorsi() != null) {
-            this.corsi = docente.getCorsi().stream()
-                    .map(CorsoDTO::new)
-                    .collect(Collectors.toList());
-        }
+//        if (docente.getCorsi() != null) {
+//            this.corsi = docente.getCorsi().stream()
+//                    .map(CorsoDTO::new)
+//                    .collect(Collectors.toList());
+//        }
     }
 
     // getter e setter
@@ -40,6 +40,6 @@ public class DocenteFormDTO {
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public List<CorsoDTO> getCorsi() { return corsi; }
-    public void setCorsi(List<CorsoDTO> corsi) { this.corsi = corsi; }
+//    public List<CorsoDTO> getCorsi() { return corsi; }
+//    public void setCorsi(List<CorsoDTO> corsi) { this.corsi = corsi; }
 }

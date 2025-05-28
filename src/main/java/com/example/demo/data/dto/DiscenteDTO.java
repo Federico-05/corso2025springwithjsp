@@ -10,7 +10,7 @@ public class DiscenteDTO {
     private Integer eta;
     private String cittaResidenza;
 
-    /* Costruttori */
+
     public DiscenteDTO() {}
 
     public DiscenteDTO( String nome, String cognome, Integer eta, String cittaResidenza) {
