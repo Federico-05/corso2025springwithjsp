@@ -31,9 +31,10 @@ public class DocenteService {
         return modelMapper.map(docente, DocenteFormDTO.class);
     }
 
-    public void saveDocente(DocenteFormDTO dto) {
+    public DocenteDTO saveDocente(DocenteFormDTO dto) {
         Docente docente = modelMapper.map(dto, Docente.class);
         docenteRepository.save(docente);
+        return null;
     }
 
     public DocenteDTO updateDocente(Long id, DocenteFormDTO docenteFormDTO) {

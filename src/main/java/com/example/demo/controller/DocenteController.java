@@ -5,10 +5,7 @@ import com.example.demo.data.dto.DocenteFormDTO;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/docenti")
@@ -17,27 +14,29 @@ public class DocenteController {
     @Autowired
     private DocenteService docenteService;
 
-    @GetMapping("/lista")
-    public List<DocenteDTO> list(Model model) {
-        return docenteService.getAllDocenti();
+    @GetMapping("/{id}")
+    public ResponseEntity<DocenteFormDTO> getById(@PathVariable Long id) {
+        DocenteFormDTO docente = docenteService.getDocenteFormById(id);
+        if (docente != null) {
+            return ResponseEntity.ok(docente);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping("/nuovo")
-    public DocenteFormDTO showAdd(Model model) {
-        return new DocenteFormDTO();
-    }
 
     @PostMapping("/nuovo")
-    public void create(@RequestBody DocenteFormDTO docenteDTO) {
-        docenteService.saveDocente(docenteDTO);
+    public ResponseEntity<DocenteDTO> create(@RequestBody DocenteFormDTO docenteDTO) {
+        DocenteDTO saved = docenteService.saveDocente(docenteDTO);
+        return ResponseEntity.ok(saved);
     }
-
 
     @PutMapping("/{id}/edit")
     public ResponseEntity<DocenteDTO> updateDocente(@PathVariable Long id, @RequestBody DocenteFormDTO docenteFormDTO) {
         DocenteDTO updateDocente = docenteService.updateDocente(id, docenteFormDTO);
         return ResponseEntity.ok(updateDocente);
     }
+
 
 
     @DeleteMapping("/{id}/delete")
