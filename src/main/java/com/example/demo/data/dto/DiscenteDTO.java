@@ -1,26 +1,28 @@
-
 package com.example.demo.data.dto;
 
-import java.util.List;
-
 public class DiscenteDTO {
-
+    private Long id;
     private String nome;
     private String cognome;
     private Integer eta;
     private String cittaResidenza;
 
-
     public DiscenteDTO() {}
 
-    public DiscenteDTO( String nome, String cognome, Integer eta, String cittaResidenza) {
+    public DiscenteDTO(String nome, String cognome, Integer eta, String cittaResidenza) {
         this.nome = nome;
         this.cognome = cognome;
         this.eta = eta;
         this.cittaResidenza = cittaResidenza;
     }
 
-    /* Getters e Setters */
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
@@ -54,10 +56,10 @@ public class DiscenteDTO {
         this.cittaResidenza = cittaResidenza;
     }
 
-
     @Override
     public String toString() {
         return "DiscenteDTO{" +
+                "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
                 ", eta=" + eta +

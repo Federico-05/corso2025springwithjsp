@@ -31,10 +31,20 @@ public class DocenteService {
         return modelMapper.map(docente, DocenteFormDTO.class);
     }
 
+
     public DocenteDTO saveDocente(DocenteFormDTO dto) {
-        Docente docente = modelMapper.map(dto, Docente.class);
-        docenteRepository.save(docente);
-        return null;
+        try {
+            // Converti da DTO a entity
+            Docente docente = modelMapper.map(dto, Docente.class);
+
+            // Salva l'entità
+            Docente savedDocente = docenteRepository.save(docente);
+
+            // Converti l'entità salvata in DTO e restituiscila
+            return modelMapper.map(savedDocente, DocenteDTO.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante il salvataggio del docente: " + e.getMessage());
+        }
     }
 
     public DocenteDTO updateDocente(Long id, DocenteFormDTO docenteFormDTO) {
@@ -49,6 +59,16 @@ public class DocenteService {
 
         return modelMapper.map(updatedDocente, DocenteDTO.class);
     }
+
+    public DocenteDTO cercaPerNomeECognome(String nome, String cognome) {
+        Docente docente = docenteRepository.findByNomeAndCognome(nome, cognome);
+        if (docente == null) {
+            return null;
+        }
+        return modelMapper.map(docente, DocenteDTO.class);
+    }
+
+
 
 
     public void deleteDocente(Long id) {

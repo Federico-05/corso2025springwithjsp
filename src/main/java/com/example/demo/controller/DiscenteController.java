@@ -2,14 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.data.dto.DiscenteDTO;
 import com.example.demo.data.dto.DiscenteFormDTO;
-import com.example.demo.data.dto.DocenteDTO;
-import com.example.demo.data.dto.DocenteFormDTO;
-import com.example.demo.data.entity.Discente;
 import com.example.demo.service.DiscenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,45 +16,52 @@ public class DiscenteController {
     @Autowired
     private DiscenteService discenteService;
 
-    @GetMapping("/lista")
-    public List<DiscenteDTO> list(Model model) {
-        return discenteService.getAllDiscenti();
+    @GetMapping("/search-or-create")
+    public ResponseEntity<DiscenteDTO> searchOrCreate(@RequestParam String nome, @RequestParam String cognome) {
+        DiscenteDTO result = discenteService.searchOrCreate(nome, cognome);
+        return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/nuovo")
-    public DiscenteFormDTO showAdd(Model model) {
-        return new DiscenteFormDTO();
+
+    @GetMapping("/lista")
+    public ResponseEntity<List<DiscenteDTO>> getAllDiscenti() {
+        List<DiscenteDTO> lista = discenteService.getAllDiscenti();
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DiscenteFormDTO> getDiscente(@PathVariable Long id) {
+        DiscenteFormDTO discente = discenteService.getDiscenteFormById(id);
+        return discente != null ? ResponseEntity.ok(discente) : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<List<DiscenteDTO>> getOrCreateDiscenti(@RequestBody List<DiscenteDTO> discenti) {
+        List<DiscenteDTO> risultati = discenteService.getOrCreateDiscenti(discenti);
+        return ResponseEntity.ok(risultati);
     }
 
     @PostMapping("/nuovo")
-    public void create(@RequestBody DiscenteFormDTO discenteDTO) {
-        discenteService.saveDiscente(discenteDTO);
+    public ResponseEntity<DiscenteDTO> create(@RequestBody DiscenteFormDTO discenteFormDTO) {
+        DiscenteDTO saved = discenteService.saveDiscente(discenteFormDTO);
+        return ResponseEntity.ok(saved);
     }
-
 
     @PutMapping("/{id}/edit")
     public ResponseEntity<DiscenteDTO> updateDiscente(@PathVariable Long id, @RequestBody DiscenteFormDTO discenteFormDTO) {
-        DiscenteDTO updateDiscente = discenteService.updateDiscente(id, discenteFormDTO);
-        return ResponseEntity.ok(updateDiscente);
+        DiscenteDTO updated = discenteService.updateDiscente(id, discenteFormDTO);
+        return updated != null ? ResponseEntity.ok(updated) : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         discenteService.deleteDiscente(id);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/asc")
-    public String ordinaPerNomeAsc(Model model) {
-        List<Discente> discentiOrdinati = discenteService.ordinaPerNomeAsc();
-        model.addAttribute("discenti", discentiOrdinati);
-        return "list-discenti";
-    }
-
-    @GetMapping("/desc")
-    public String ordinaPerNomeDesc(Model model) {
-        List<Discente> discentiOrdinati = discenteService.ordinaPerNomeDesc();
-        model.addAttribute("discenti", discentiOrdinati);
-        return "list-discenti";
+    @GetMapping("/cerca")
+    public ResponseEntity<DiscenteDTO> cercaPerNomeECognome(@RequestParam String nome, @RequestParam String cognome) {
+        DiscenteDTO result = discenteService.cercaPerNomeECognome(nome, cognome);
+        return result != null ? ResponseEntity.ok(result) : ResponseEntity.notFound().build();
     }
 }

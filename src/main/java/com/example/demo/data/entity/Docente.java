@@ -66,11 +66,5 @@ public class Docente {
         this.email = email;
     }
 
-//    public List<Corso> getCorsi() {
-//        return corsi;
-//    }
-//
-//    public void setCorsi(List<Corso> corsi) {
-//        this.corsi = corsi;
-//    }
+
 }
